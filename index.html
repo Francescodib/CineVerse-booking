@@ -1,86 +1,222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineVerse - Prenotazione biglietti</title>
+    <title>CineVerse - Prenotazione Biglietti Cinema</title>
     
-    <!-- include bootstrap 5-->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <div class="container-fluid d-flex flex-column vh-100">
-    <div class="row">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">CineVerse</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-camera-reels"></i> CineVerse
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link" href="#"><i class="bi bi-house"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Prenotazioni</a>
+                        <a class="nav-link" href="#"><i class="bi bi-film"></i> Film</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contatti</a>
+                        <a class="nav-link" href="#"><i class="bi bi-ticket-perforated"></i> Biglietti</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Chi Siamo</a>
+                        <a class="nav-link" href="#"><i class="bi bi-person-circle"></i> Account</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <aside class="col-md-3 col-lg-2 sidebar d-flex flex-column p-3">
-        <h3>Informazioni Utili</h3>
-        <p>Per qualsiasi informazione riguardo le prenotazioni, contattaci al numero: <strong>123-456-7890</strong></p>
-        <p>Oppure inviaci un'email a: <strong><a href="mailto:info@cineverse.it">info@cineverse.it</a></strong></p>
-    </aside>
-    <main class="col-md-9 col-lg-10 ms-sm-auto px-4 py-3">
-        <h1 class="text-center mb-4">Prenotazione Biglietti</h1>
-        <form id="bookingForm">
-            <div class="mb-3">
-                <label for="movieTitle" class="form-label">Titolo del Film</label>
-                <select class="form-select" id="movieTitle" required>
-                    <option value="" disabled selected>Seleziona un film</option>
-                    <option value="Film1">Film 1</option>
-                    <option value="Film2">Film 2</option>
-                    <option value="Film3">Film 3</option>
-                    <option value="Film4">Film 4</option>
-                    <option value="Film5">Film 5</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="showTime" class="form-label">Orario di Proiezione</label>
-                <input type="time" class="form-control" id="showTime" required>
-            </div>
-            <div class="mb-3">
-                
-                <label for="numberOfTickets" class="form-label">Numero di Biglietti</label>
-                <input type="number" class="form-control" id="numberOfTickets" min="1" required>
-                <input type="hidden" id="selectedSeatsInput" name="selectedSeats">
-            </div>
-            <button type="submit" class="btn btn-primary">Prenota</button>
-        </form>
-        <h2>Seleziona i tuoi posti</h2>
-                <div id="seats"></div>
-                <p id="selectedList">Posti selezionati: nessuno</p>
-        <div id="confirmationMessage" class="mt-4"></div>
-    </main>
-    
-    </div></div>
 
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <p>&copy; 2025 CineVerse. Tutti i diritti riservati.</p>
-    </footer>
+    <div style="padding-top: 76px;">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="container">
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar" style="width: 33%"></div>
+                </div>
+                <div class="step-indicator">
+                    <div class="step active" id="step1">
+                        <div class="step-number">1</div>
+                        <small>Selezione Film</small>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-number">2</div>
+                        <small>Prenotazione Posti</small>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-number">3</div>
+                        <small>Pagamento</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 1: Selezione Film -->
+        <div class="movie-selection-screen" id="movieSelectionScreen">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="container">
+                    <h1 class="hero-title">Scegli il Tuo Film</h1>
+                    <p class="hero-subtitle">Seleziona il film e l'orario che prefersici per iniziare la prenotazione</p>
+                </div>
+            </div>
+
+            <div class="container">
+                <!-- Filtri -->
+                <div class="filters">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col-md-12 d-flex justify-content-end align-items-center">
+                            <h5 class="me-3 my-0"><i class="bi bi-clock"></i> Filtra per Orario:</h5>
+                            <div id="timeFilters">
+                                <button class="filter-btn active" data-time="all">Tutti</button>
+                                <button class="filter-btn" data-time="pomeridiano">Pomeridiano</button>
+                                <button class="filter-btn" data-time="serale">Serale</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Griglia Film -->
+                <div class="row" id="moviesGrid">
+                    <!-- Popolato dinamicamente da JavaScript -->
+                </div>
+
+                <!-- Bottone Continua -->
+                <div class="text-center mt-4 mb-5">
+                    <button class="continue-btn" id="continueToSeats" disabled>
+                        <i class="bi bi-arrow-right-circle"></i> Continua alla Selezione Posti
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: Selezione Posti (nascosto inizialmente) -->
+        <div class="seat-selection-screen" id="seatSelectionScreen">
+            <div class="container">
+        
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="seats-container">
+                            <h3 class="mb-4">Scegli i Tuoi Posti</h3>
+                            <div class="screen">SCHERMO</div>
+                            <div id="seats" class="mb-4">
+                                <!-- Popolato dinamicamente con griglia fissa 15x10 -->
+                            </div>
+                            <div class="legend d-flex justify-content-center gap-4 mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="seat free me-2"></div>
+                                    <small>Libero</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="seat selected me-2"></div>
+                                    <small>Selezionato</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="seat occupied me-2"></div>
+                                    <small>Occupato</small>
+                                </div>
+                            </div>
+                            <p id="selectedList" class="mt-3">Posti selezionati: nessuno</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card bg-dark text-light">
+                            <div class="card-header">
+                                <h5><i class="bi bi-receipt"></i> Riepilogo Prenotazione</h5>
+                            </div>
+                            <div class="card-body" id="bookingSummary">
+                                <!-- Popolato dinamicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-outline-light me-3" id="backToMovies">
+                        <i class="bi bi-arrow-left"></i> Torna ai Film
+                    </button>
+                    <button class="continue-btn" id="continueToPayment" disabled>
+                        <i class="bi bi-credit-card"></i> Procedi al Pagamento
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: Pagamento (nascosto inizialmente) -->
+        <div class="payment-screen" id="paymentScreen">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="card bg-dark text-light">
+                            <div class="card-header">
+                                <h3><i class="bi bi-credit-card"></i> Completa il Pagamento</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="finalSummary" class="mb-4">
+                                    <!-- Riepilogo finale -->
+                                </div>
+                                
+                                <form id="paymentForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label" for="firstName">Nome</label>
+                                            <input type="text" class="form-control" id="firstName" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label" for="lastName">Cognome</label>
+                                            <input type="text" class="form-control" id="lastName" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" autocomplete="email">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="cardNumber">Numero Carta</label>
+                                        <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 mb-3">
+                                            <label class="form-label" for="cardExpiry">Scadenza</label>
+                                            <input type="text" class="form-control" id="cardExpiry" placeholder="MM/AA" required>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <label class="form-label" for="cardCvv">CVV</label>
+                                            <input type="text" class="form-control" id="cardCvv" placeholder="123" required>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button class="btn btn-outline-light me-3" id="backToSeats">
+                                <i class="bi bi-arrow-left"></i> Torna ai Posti
+                            </button>
+                            <button class="continue-btn" id="completePayment">
+                                <i class="bi bi-check-circle"></i> Completa Pagamento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="./src/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 </body>
 </html>
