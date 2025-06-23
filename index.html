@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineVerse - Prenotazione biglietti</title>
+    
+    <!-- include bootstrap 5-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <div class="container-fluid d-flex flex-column vh-100">
+    <div class="row">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">CineVerse</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Prenotazioni</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contatti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Chi Siamo</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <aside class="col-md-3 col-lg-2 sidebar d-flex flex-column p-3">
+        <h3>Informazioni Utili</h3>
+        <p>Per qualsiasi informazione riguardo le prenotazioni, contattaci al numero: <strong>123-456-7890</strong></p>
+        <p>Oppure inviaci un'email a: <strong><a href="mailto:info@cineverse.it">info@cineverse.it</a></strong></p>
+    </aside>
+    <main class="col-md-9 col-lg-10 ms-sm-auto px-4 py-3">
+        <h1 class="text-center mb-4">Prenotazione Biglietti</h1>
+        <form id="bookingForm">
+            <div class="mb-3">
+                <label for="movieTitle" class="form-label">Titolo del Film</label>
+                <select class="form-select" id="movieTitle" required>
+                    <option value="" disabled selected>Seleziona un film</option>
+                    <option value="Film1">Film 1</option>
+                    <option value="Film2">Film 2</option>
+                    <option value="Film3">Film 3</option>
+                    <option value="Film4">Film 4</option>
+                    <option value="Film5">Film 5</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="showTime" class="form-label">Orario di Proiezione</label>
+                <input type="time" class="form-control" id="showTime" required>
+            </div>
+            <div class="mb-3">
+                
+                <label for="numberOfTickets" class="form-label">Numero di Biglietti</label>
+                <input type="number" class="form-control" id="numberOfTickets" min="1" required>
+                <input type="hidden" id="selectedSeatsInput" name="selectedSeats">
+            </div>
+            <button type="submit" class="btn btn-primary">Prenota</button>
+        </form>
+        <h2>Seleziona i tuoi posti</h2>
+                <div id="seats"></div>
+                <p id="selectedList">Posti selezionati: nessuno</p>
+        <div id="confirmationMessage" class="mt-4"></div>
+    </main>
+    
+    </div></div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2025 CineVerse. Tutti i diritti riservati.</p>
+    </footer>
+    <script type="module" src="./src/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+</body>
+</html>

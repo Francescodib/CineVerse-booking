@@ -1,0 +1,30 @@
+ #seats {
+      display: grid;
+      grid-template-columns: repeat(15, 30px);
+      gap: 5px;
+      padding: 20px;
+    }
+
+    .seat {
+      width: 30px;
+      height: 30px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: small;
+      text-align: center;
+    }
+
+    .free {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .occupied {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .selected {
+      background-color: #2196f3;
+    }
