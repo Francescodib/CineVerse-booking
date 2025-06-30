@@ -1,11 +1,10 @@
 import StorageManager from './local_storage.js';
-
 import APP_DATA from './app-data.js';
-
 
 // Gestore dell'applicazione
 class CineVerseApp {
     constructor() {
+        this.seatClickHandler = null; // Riferimento al gestore eventi
         this.init();
     }
 
@@ -61,7 +60,7 @@ class CineVerseApp {
 
     createMovieCard(film) {
         const col = document.createElement('div');
-        col.className = 'col-lg-4 col-md-6 mb-4';
+        col.className = 'col-lg-3 col-md-6 mb-4';
 
         const showtimesHTML = film.showtimes.map(showtime => 
             `<button class="showtime-btn" data-film="${film.id}" data-time="${showtime.time}">
@@ -166,7 +165,7 @@ class CineVerseApp {
                 show = film.showtimes.some(s => s.type === timeType);
             }
             
-            card.closest('.col-lg-4').style.display = show ? 'block' : 'none';
+            card.closest('.col-lg-3').style.display = show ? 'block' : 'none';
         });
     }
 
@@ -189,93 +188,121 @@ class CineVerseApp {
         });
     }
 
-goToStep(step) {
-    // Aggiorna step corrente
-    APP_DATA.currentStep = step;
+    goToStep(step) {
+        // Aggiorna step corrente
+        APP_DATA.currentStep = step;
 
-    // Se torniamo al step 1, pulisci la selezione corrente
-    if (step === 1) {
-        // Rimuovi selezioni visive precedenti
-        document.querySelectorAll('.showtime-btn').forEach(btn => {
-            btn.classList.remove('selected');
-        });
-        document.querySelectorAll('.movie-card').forEach(card => {
-            card.style.border = 'none';
-        });
-        
-        // Non pulire completamente APP_DATA.currentBooking qui per permettere 
-        // di mantenere la selezione se si torna indietro
-    }
-
-    // Aggiorna progress bar
-    const progressBar = document.getElementById('progressBar');
-    progressBar.style.width = `${(step / 3) * 100}%`;
-
-    // Aggiorna indicatori step
-    document.querySelectorAll('.step').forEach((stepEl, index) => {
-        stepEl.classList.remove('active', 'completed');
-        
-        if (index + 1 === step) {
-            stepEl.classList.add('active');
-        } else if (index + 1 < step) {
-            stepEl.classList.add('completed');
+        // Se torniamo al step 1, pulisci la selezione corrente
+        if (step === 1) {
+            // Rimuovi selezioni visive precedenti
+            document.querySelectorAll('.showtime-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.querySelectorAll('.movie-card').forEach(card => {
+                card.style.border = 'none';
+            });
+            
+            // Reset della prenotazione quando si torna al primo step
+            APP_DATA.currentBooking = {
+                film: null,
+                showtime: null,
+                seats: [],
+                ticketTypes: {},
+                total: 0
+            };
         }
-    });
 
-    // Mostra/nascondi schermate
-    document.querySelectorAll('.movie-selection-screen, .seat-selection-screen, .payment-screen').forEach(screen => {
-        screen.style.display = 'none';
-    });
+        // Aggiorna progress bar
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = `${(step / 3) * 100}%`;
 
-    switch(step) {
-        case 1:
-            document.getElementById('movieSelectionScreen').style.display = 'block';                
-            break;
-        case 2:
-            document.getElementById('seatSelectionScreen').style.display = 'block';
-            this.initSeatSelection();
-            break;
-        case 3:
-            document.getElementById('paymentScreen').style.display = 'block';
-            this.initPayment();
-            break;
+        // Aggiorna indicatori step
+        document.querySelectorAll('.step').forEach((stepEl, index) => {
+            stepEl.classList.remove('active', 'completed');
+            
+            if (index + 1 === step) {
+                stepEl.classList.add('active');
+            } else if (index + 1 < step) {
+                stepEl.classList.add('completed');
+            }
+        });
+
+        // Mostra/nascondi schermate
+        document.querySelectorAll('.movie-selection-screen, .seat-selection-screen, .payment-screen').forEach(screen => {
+            screen.style.display = 'none';
+        });
+
+        switch(step) {
+            case 1:
+                document.getElementById('movieSelectionScreen').style.display = 'block';                
+                break;
+            case 2:
+                document.getElementById('seatSelectionScreen').style.display = 'block';
+                this.initSeatSelection();
+                break;
+            case 3:
+                document.getElementById('paymentScreen').style.display = 'block';
+                this.initPayment();
+                break;
+        }
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
 
     initSeatSelection() {
         const { film, showtime } = APP_DATA.currentBooking;
         
-        // Genera griglia posti con struttura originale
-        this.generateSeatsGrid();
+        // Genera griglia posti SOLO se non esiste già o se è cambiato film/orario
+        const container = document.getElementById('seats');
+        const needsRegeneration = container.innerHTML === '' || 
+                                container.dataset.filmId != film.id || 
+                                container.dataset.showtime != showtime;
+
+        if (needsRegeneration) {
+            this.generateSeatsGrid();
+        } else {
+            // Se la griglia esiste già, ripristina solo la selezione
+            this.restoreSeatSelection();
+        }
         
         // Aggiorna riepilogo
         this.updateBookingSummary();
-
-        // Event listener per i select dei tipi biglietto
-        document.addEventListener('change', (e) => {
-            if (e.target.classList.contains('ticket-type-select')) {
-                const seatNumber = parseInt(e.target.dataset.seat);
-                const ticketType = e.target.value;
-                this.updateTicketType(seatNumber, ticketType);
-            }
-        });
     }
 
     generateSeatsGrid() {
         const container = document.getElementById('seats');
         container.innerHTML = '';
 
-        APP_DATA.currentBooking.seats = [];
-        APP_DATA.currentBooking.ticketTypes = {};
-
         const { film, showtime } = APP_DATA.currentBooking;
+        
+        // Marca il container con film e orario correnti
+        container.dataset.filmId = film.id;
+        container.dataset.showtime = showtime;
+
         const occupiedSeats = StorageManager.getOccupiedSeats(film.id, showtime);
 
         const rows = 10;
         const cols = 15;
+
+        // Rimuovi event listener precedente se esiste
+        if (this.seatClickHandler) {
+            container.removeEventListener('click', this.seatClickHandler);
+        }
+
+        // Crea nuovo gestore eventi
+        this.seatClickHandler = (event) => {
+            const button = event.target.closest('button');
+            if (!button || !container.contains(button)) return;
+            
+            if (button.classList.contains('free') || button.classList.contains('selected')) {
+                console.log('Posto cliccato:', button.dataset.index);
+                button.classList.toggle('selected');
+                this.updateTicketCount();
+                this.updateTicketTypes();
+                this.updateBookingSummary();
+            }
+        };
 
         // Usa ciclo for per generare i posti
         for (let i = 0; i < rows * cols; i++) {
@@ -294,29 +321,32 @@ goToStep(step) {
             container.appendChild(btn);
         }
 
-        // IMPORTANTE: Rimuovo event listener precedenti prima di aggiungerne uno nuovo
-        container.removeEventListener('click', this.handleSeatClick);
+        // Aggiungi il nuovo event listener
+        container.addEventListener('click', this.seatClickHandler);
 
-        // Event listener per la selezione dei posti  con event delegation
-        container.addEventListener('click', (event) => {
-            const button = event.target.closest('button');
-            if (!button || !container.contains(button)) return;
-            
-            if (button.classList.contains('free')) {
-                console.log('Posto selezionato:', button.dataset.index);
-                button.classList.toggle('selected');
-                this.updateTicketCount();
-                console.log("updateTicketCount chiamato");
-                this.updateTicketTypes();
-                this.updateBookingSummary();
+        // Ripristina la selezione se esistono posti già selezionati
+        this.restoreSeatSelection();
+    }
+
+    restoreSeatSelection() {
+        const { seats } = APP_DATA.currentBooking;
+        
+        // Ripristina la selezione visiva dei posti
+        seats.forEach(seatNumber => {
+            const seatElement = document.querySelector(`[data-index="${seatNumber}"]`);
+            if (seatElement && seatElement.classList.contains('free')) {
+                seatElement.classList.add('selected');
             }
         });
+
+        // Aggiorna il contatore e la lista
+        this.updateTicketCount();
     }
 
     updateTicketCount() {
         const selectedSeats = document.querySelectorAll('button.seat.selected');
         console.log("Posti selezionati ", selectedSeats);
-        const selectedIndexes = Array.from(selectedSeats).map(seat => seat.dataset.index);
+        const selectedIndexes = Array.from(selectedSeats).map(seat => parseInt(seat.dataset.index));
 
         // Aggiorna la lista dei posti selezionati
         const selectedSeatsList = document.getElementById('selectedList');
@@ -325,30 +355,30 @@ goToStep(step) {
             : 'Posti selezionati: nessuno';
 
         // Aggiorna dati prenotazione
-        APP_DATA.currentBooking.seats = selectedIndexes.map(index => parseInt(index));
+        APP_DATA.currentBooking.seats = selectedIndexes;
 
         // Abilita/disabilita bottone continua
         document.getElementById('continueToPayment').disabled = selectedIndexes.length === 0;
+
+        // Salva in localStorage
+        StorageManager.saveBooking(APP_DATA.currentBooking);
     }
 
     updateTicketTypes() {
         const selectedSeats = document.querySelectorAll('.seat.selected');
-         console.log("Posti selezionati per tipi: ", selectedSeats);
-        // Inizializza tipi biglietti per posti selezionati
+        console.log("Posti selezionati per tipi: ", selectedSeats);
+        
+        // Crea un nuovo oggetto per i tipi biglietti basato sui posti attualmente selezionati
+        const newTicketTypes = {};
+        
         selectedSeats.forEach(seat => {
             const seatNumber = seat.dataset.index;
-            if (!APP_DATA.currentBooking.ticketTypes[seatNumber]) {
-                APP_DATA.currentBooking.ticketTypes[seatNumber] = 'full';
-            }
+            // Mantieni il tipo precedente se esiste, altrimenti usa 'full'
+            newTicketTypes[seatNumber] = APP_DATA.currentBooking.ticketTypes[seatNumber] || 'full';
         });
 
-        // Rimuovi tipi per posti deselezionati
-        Object.keys(APP_DATA.currentBooking.ticketTypes).forEach(seatNumber => {
-            const seatElement = document.querySelector(`[data-index="${seatNumber}"]`);
-            if (!seatElement || !seatElement.classList.contains('selected')) {
-                delete APP_DATA.currentBooking.ticketTypes[seatNumber];
-            }
-        });
+        // Aggiorna i tipi biglietti
+        APP_DATA.currentBooking.ticketTypes = newTicketTypes;
     }
 
     updateBookingSummary() {
@@ -404,6 +434,15 @@ goToStep(step) {
 
         summary.innerHTML = summaryHTML;
         APP_DATA.currentBooking.total = total;
+
+        // Riapplica event listeners per i select dei tipi biglietto
+        summary.querySelectorAll('.ticket-type-select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                const seatNumber = e.target.dataset.seat;
+                const ticketType = e.target.value;
+                this.updateTicketType(seatNumber, ticketType);
+            });
+        });
 
         // Salva in localStorage
         StorageManager.saveBooking(APP_DATA.currentBooking);
@@ -467,18 +506,18 @@ goToStep(step) {
         continueBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Elaborazione...';
 
         setTimeout(() => {
-        // Salva solo i nuovi posti prenotati (non quelli già configurati)
-        const { film, showtime, seats } = APP_DATA.currentBooking;
-        StorageManager.setOccupiedSeats(film.id, showtime, seats);
+            // Salva solo i nuovi posti prenotati (non quelli già configurati)
+            const { film, showtime, seats } = APP_DATA.currentBooking;
+            StorageManager.setOccupiedSeats(film.id, showtime, seats);
 
-        // Mostra successo
-        this.showPaymentSuccess();
+            // Mostra successo
+            this.showPaymentSuccess();
 
-        // Reset
-        continueBtn.disabled = false;
-        continueBtn.innerHTML = originalText;
-        
-      }, 3000);
+            // Reset
+            continueBtn.disabled = false;
+            continueBtn.innerHTML = originalText;
+            
+        }, 3000);
     }
 
     showPaymentSuccess() {
