@@ -245,6 +245,9 @@ class CineVerseApp {
         const container = document.getElementById('seats');
         container.innerHTML = '';
 
+        APP_DATA.currentBooking.seats = [];
+        APP_DATA.currentBooking.ticketTypes = {};
+
         const { film, showtime } = APP_DATA.currentBooking;
         const occupiedSeats = StorageManager.getOccupiedSeats(film.id, showtime);
 
@@ -277,6 +280,7 @@ class CineVerseApp {
                 console.log('Posto selezionato:', button.dataset.index);
                 button.classList.toggle('selected');
                 this.updateTicketCount();
+                console.log("updateTicketCount chiamato");
                 this.updateTicketTypes();
                 this.updateBookingSummary();
             }
@@ -303,7 +307,7 @@ class CineVerseApp {
 
     updateTicketTypes() {
         const selectedSeats = document.querySelectorAll('.seat.selected');
-        
+         console.log("Posti selezionati per tipi: ", selectedSeats);
         // Inizializza tipi biglietti per posti selezionati
         selectedSeats.forEach(seat => {
             const seatNumber = seat.dataset.index;
@@ -347,6 +351,8 @@ class CineVerseApp {
             const ticketType = ticketTypes[seatNumber] || 'full';
             const price = APP_DATA.ticketPrices[ticketType];
             total += price;
+
+            console.log(`Posto ${seatNumber} - Tipo: ${ticketType} - Prezzo: €${price.toFixed(2)}`);
 
             summaryHTML += `
                 <div class="d-flex justify-content-between align-items-center mb-2">
