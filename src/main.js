@@ -189,47 +189,61 @@ class CineVerseApp {
         });
     }
 
-    goToStep(step) {
-        // Aggiorna step corrente
-        APP_DATA.currentStep = step;
+goToStep(step) {
+    // Aggiorna step corrente
+    APP_DATA.currentStep = step;
 
-        // Aggiorna progress bar
-        const progressBar = document.getElementById('progressBar');
-        progressBar.style.width = `${(step / 3) * 100}%`;
-
-        // Aggiorna indicatori step
-        document.querySelectorAll('.step').forEach((stepEl, index) => {
-            stepEl.classList.remove('active', 'completed');
-            
-            if (index + 1 === step) {
-                stepEl.classList.add('active');
-            } else if (index + 1 < step) {
-                stepEl.classList.add('completed');
-            }
+    // Se torniamo al step 1, pulisci la selezione corrente
+    if (step === 1) {
+        // Rimuovi selezioni visive precedenti
+        document.querySelectorAll('.showtime-btn').forEach(btn => {
+            btn.classList.remove('selected');
         });
-
-        // Mostra/nascondi schermate
-        document.querySelectorAll('.movie-selection-screen, .seat-selection-screen, .payment-screen').forEach(screen => {
-            screen.style.display = 'none';
+        document.querySelectorAll('.movie-card').forEach(card => {
+            card.style.border = 'none';
         });
-
-        switch(step) {
-            case 1:
-                document.getElementById('movieSelectionScreen').style.display = 'block';                
-                break;
-            case 2:
-                document.getElementById('seatSelectionScreen').style.display = 'block';
-                this.initSeatSelection();
-                break;
-            case 3:
-                document.getElementById('paymentScreen').style.display = 'block';
-                this.initPayment();
-                break;
-        }
-
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Non pulire completamente APP_DATA.currentBooking qui per permettere 
+        // di mantenere la selezione se si torna indietro
     }
+
+    // Aggiorna progress bar
+    const progressBar = document.getElementById('progressBar');
+    progressBar.style.width = `${(step / 3) * 100}%`;
+
+    // Aggiorna indicatori step
+    document.querySelectorAll('.step').forEach((stepEl, index) => {
+        stepEl.classList.remove('active', 'completed');
+        
+        if (index + 1 === step) {
+            stepEl.classList.add('active');
+        } else if (index + 1 < step) {
+            stepEl.classList.add('completed');
+        }
+    });
+
+    // Mostra/nascondi schermate
+    document.querySelectorAll('.movie-selection-screen, .seat-selection-screen, .payment-screen').forEach(screen => {
+        screen.style.display = 'none';
+    });
+
+    switch(step) {
+        case 1:
+            document.getElementById('movieSelectionScreen').style.display = 'block';                
+            break;
+        case 2:
+            document.getElementById('seatSelectionScreen').style.display = 'block';
+            this.initSeatSelection();
+            break;
+        case 3:
+            document.getElementById('paymentScreen').style.display = 'block';
+            this.initPayment();
+            break;
+    }
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
     initSeatSelection() {
         const { film, showtime } = APP_DATA.currentBooking;
@@ -239,6 +253,15 @@ class CineVerseApp {
         
         // Aggiorna riepilogo
         this.updateBookingSummary();
+
+        // Event listener per i select dei tipi biglietto
+        document.addEventListener('change', (e) => {
+            if (e.target.classList.contains('ticket-type-select')) {
+                const seatNumber = parseInt(e.target.dataset.seat);
+                const ticketType = e.target.value;
+                this.updateTicketType(seatNumber, ticketType);
+            }
+        });
     }
 
     generateSeatsGrid() {
@@ -270,6 +293,9 @@ class CineVerseApp {
 
             container.appendChild(btn);
         }
+
+        // IMPORTANTE: Rimuovo event listener precedenti prima di aggiungerne uno nuovo
+        container.removeEventListener('click', this.handleSeatClick);
 
         // Event listener per la selezione dei posti  con event delegation
         container.addEventListener('click', (event) => {
@@ -358,8 +384,7 @@ class CineVerseApp {
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span>Posto ${seatNumber}</span>
                     <div>
-                        <select class="form-select form-select-sm" style="width: auto; display: inline-block;" 
-                                onchange="app.updateTicketType(${seatNumber}, this.value)">
+                        <select class="form-select form-select-sm ticket-type-select" style="width: auto; display: inline-block;" data-seat="${seatNumber}">
                             <option value="full" ${ticketType === 'full' ? 'selected' : ''}>Intero €${APP_DATA.ticketPrices.full.toFixed(2)}</option>
                             <option value="reduced" ${ticketType === 'reduced' ? 'selected' : ''}>Ridotto €${APP_DATA.ticketPrices.reduced.toFixed(2)}</option>
                         </select>
