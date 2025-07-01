@@ -224,7 +224,7 @@ Questo progetto è rilasciato sotto licenza MIT. Vedi il file [LICENSE](LICENSE)
 ## 🙏 Ringraziamenti
 
 - Bootstrap team per il framework CSS
-- Bootstrap Icons per l'iconografia
+- Bootstrap Icons per le icone
 - Comunità open source per l'ispirazione
 
 ---
