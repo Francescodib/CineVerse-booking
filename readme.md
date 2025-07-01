@@ -218,7 +218,7 @@ Questo progetto è rilasciato sotto licenza MIT. Vedi il file [LICENSE](LICENSE)
 **[Francesco di Biase]** - *Sviluppatore Full Stack*
 
 - GitHub: [@tFrancescodib](https://github.com/Francescodib)
-- LinkedIn: [Il Tuo Profilo](https://www.linkedin.com/in/francescodibiase79/)
+- LinkedIn: [@Francescodibiase79](https://www.linkedin.com/in/francescodibiase79/)
 - Email: info@francescodibiase.com
 
 ## 🙏 Ringraziamenti
