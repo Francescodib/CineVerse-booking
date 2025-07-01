@@ -127,3 +127,15 @@ dist
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+index.html
+consegna_Francesco_di_Biase.zip
+consegna_Francesco_di_Biase/assets/img/avengers.jpg
+consegna_Francesco_di_Biase/assets/img/dune.jpg
+consegna_Francesco_di_Biase/assets/img/il-padrino.jpg
+consegna_Francesco_di_Biase/assets/img/inception.jpg
+consegna_Francesco_di_Biase/assets/img/lalaland.jpg
+consegna_Francesco_di_Biase/assets/img/parasite.jpg
+consegna_Francesco_di_Biase/css/style.css
+consegna_Francesco_di_Biase/src/app-data.js
+consegna_Francesco_di_Biase/src/local_storage.js
+consegna_Francesco_di_Biase/src/main.js
