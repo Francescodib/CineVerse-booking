@@ -14,7 +14,7 @@ Un sistema moderno e intuitivo per la prenotazione di biglietti del cinema, svil
 
 ## 🎯 Demo Live
 
-[Visualizza la Demo](https://tuonome.github.io/cineverse) *(sostituire con il link effettivo)*
+[Visualizza la Demo](https://francescodib.github.io/CineVerse-booking/) 
 
 ## 📸 Screenshots
 
