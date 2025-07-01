@@ -1,28 +1,28 @@
-# 🎬 CineVerse - Sistema di Prenotazione Cinema
+# CineVerse - Sistema di Prenotazione Cinema
 
 Un sistema moderno e intuitivo per la prenotazione di biglietti del cinema, sviluppato con JavaScript vanilla e Bootstrap. L'applicazione offre un'esperienza utente fluida attraverso tre step principali: selezione del film, scelta dei posti e pagamento.
 
-## ✨ Caratteristiche Principali
+## Caratteristiche Principali
 
-- **🎭 Selezione Film**: Catalogo di film con filtri per orario e disponibilità in tempo reale
-- **🪑 Mappa Posti Interattiva**: Griglia visuale 15x10 con posti liberi, occupati e selezionabili
-- **🎫 Tipi Biglietto**: Supporto per biglietti interi e ridotti con prezzi differenziati
-- **💳 Sistema Pagamento**: Form di pagamento con validazione e conferma
-- **📱 Design Responsive**: Interfaccia ottimizzata per desktop e mobile
-- **🌙 Tema Scuro**: Design moderno con palette colori cinematografica
-- **💾 Persistenza Dati**: Utilizzo di localStorage per mantenere lo stato delle prenotazioni
+- **Selezione Film**: Catalogo di film con filtri per orario e disponibilità in tempo reale
+- **Mappa Posti Interattiva**: Griglia visuale 15x10 con posti liberi, occupati e selezionabili
+- **Tipi Biglietto**: Supporto per biglietti interi e ridotti con prezzi differenziati
+- **Sistema Pagamento**: Form di pagamento con validazione e conferma
+- **Design Responsive**: Interfaccia ottimizzata per desktop e mobile
+- **Tema Scuro**: Design moderno con palette colori cinematografica
+- **Persistenza Dati**: Utilizzo di localStorage per mantenere lo stato delle prenotazioni
 
-## 🎯 Demo Live
+## Demo Live
 
 [Visualizza la Demo](https://francescodib.github.io/CineVerse-booking/) 
 
-## 📸 Screenshots
+## Screenshots
 
 ![Homepage](assets/screenshots/1.png)
 ![Selezione Posti](assets/screenshots/2.png)
 ![Pagamento](assets/screenshots/3.png)
 
-## 🛠️ Tecnologie Utilizzate
+## Tecnologie Utilizzate
 
 - **HTML5** - Struttura semantica
 - **CSS3** - Styling avanzato con CSS Custom Properties
@@ -31,7 +31,7 @@ Un sistema moderno e intuitivo per la prenotazione di biglietti del cinema, svil
 - **Bootstrap Icons** - Iconografia
 - **LocalStorage API** - Persistenza dati lato client
 
-## 🚀 Installazione e Utilizzo
+## Installazione e Utilizzo
 
 ### Prerequisiti
 
@@ -51,7 +51,7 @@ Un sistema moderno e intuitivo per la prenotazione di biglietti del cinema, svil
    # Con Python
    python -m http.server 8000
    
-   # Con Node.js (serve globalmente installato)
+   # Con Node.js
    npx serve .
    
    # Con PHP
@@ -59,10 +59,10 @@ Un sistema moderno e intuitivo per la prenotazione di biglietti del cinema, svil
    ```
 
 3. **Apri nel browser**
-   - Se hai avviato un server: `http://localhost:8000`
-   - Altrimenti: apri direttamente `index.html`
+   - Con server locale: `http://localhost:8000`
+   - Oppure apri direttamente `index.html`
 
-## 📁 Struttura del Progetto
+## Struttura del Progetto
 
 ```
 cineverse/
@@ -79,7 +79,7 @@ cineverse/
 └── README.md              # Documentazione
 ```
 
-## 🎮 Come Funziona
+## Funzionamento
 
 ### Step 1: Selezione Film
 - Visualizza il catalogo dei film disponibili
@@ -99,7 +99,7 @@ cineverse/
 - Simulazione elaborazione pagamento
 - Generazione codice prenotazione
 
-## ⚙️ Configurazione
+## Configurazione
 
 ### Aggiungere Nuovi Film
 
@@ -114,12 +114,11 @@ const APP_DATA = {
       genre: "Genere",
       duration: "120 min",
       description: "Descrizione del film",
-      poster: "../assets/img/nuovo-film.jpg",
+      poster: "./assets/img/nuovo-film.jpg",
       showtimes: [
         { time: "18:00", type: "serale", availability: "available" }
       ]
     }
-    // ... altri film
   ]
 }
 ```
@@ -141,7 +140,7 @@ Aggiungi configurazioni in `initialOccupiedSeats`:
 "filmId_orario": [2, 3, 5, 6, 12, 13] // Array di posti occupati
 ```
 
-## 🎨 Personalizzazione Tema
+## Personalizzazione Tema
 
 Il tema utilizza CSS Custom Properties per facile personalizzazione:
 
@@ -156,7 +155,7 @@ Il tema utilizza CSS Custom Properties per facile personalizzazione:
 }
 ```
 
-## 🧪 Funzionalità Debug
+## Funzionalità Debug
 
 Apri la console del browser per accedere a funzioni di debug:
 
@@ -168,14 +167,14 @@ console.log(getOccupancyStats());
 resetAllBookings();
 ```
 
-## 📱 Compatibilità Browser
+## Compatibilità Browser
 
-- ✅ Chrome 60+
-- ✅ Firefox 55+
-- ✅ Safari 12+
-- ✅ Edge 79+
+- Chrome 60+
+- Firefox 55+
+- Safari 12+
+- Edge 79+
 
-## 🤝 Contributi
+## Contributi
 
 I contributi sono benvenuti! Per contribuire:
 
@@ -185,43 +184,43 @@ I contributi sono benvenuti! Per contribuire:
 4. Push del branch (`git push origin feature/NuovaFeature`)
 5. Apri una Pull Request
 
-### Linee Guida per Contributi
+### Linee Guida
 
 - Mantieni lo stile di codice consistente
 - Aggiungi commenti per logiche complesse
 - Testa le modifiche su diversi browser
 - Aggiorna la documentazione se necessario
 
-## 📝 Roadmap
+## Roadmap
 
-- [ ] **Autenticazione utenti** - Sistema login/registrazione
-- [ ] **Database backend** - Persistenza dati server-side
-- [ ] **Pagamento reale** - Integrazione gateway di pagamento
-- [ ] **Notifiche email** - Conferma prenotazione via email
-- [ ] **Admin panel** - Gestione film e orari
-- [ ] **Multi-lingua** - Supporto internazionale
-- [ ] **PWA** - Progressive Web App
-- [ ] **API REST** - Backend per app mobile
+- Autenticazione utenti - Sistema login/registrazione
+- Database backend - Persistenza dati server-side
+- Pagamento reale - Integrazione gateway di pagamento
+- Notifiche email - Conferma prenotazione via email
+- Admin panel - Gestione film e orari
+- Supporto multi-lingua
+- Progressive Web App
+- API REST per app mobile
 
-## 🐛 Problemi Noti
+## Note
 
 - I dati delle prenotazioni sono memorizzati solo localmente
-- Il sistema di pagamento è simulato (non reale)
+- Il sistema di pagamento è simulato a scopo dimostrativo
 - Le immagini dei poster potrebbero non caricarsi se i file non esistono
 
-## 📄 Licenza
+## Licenza
 
 Questo progetto è rilasciato sotto licenza MIT. Vedi il file [LICENSE](LICENSE) per i dettagli.
 
-## 👨‍💻 Autore
+## Autore
 
-**[Francesco di Biase]** - *Sviluppatore Full Stack*
+**Francesco di Biase** - Sviluppatore Full Stack
 
-- GitHub: [@tFrancescodib](https://github.com/Francescodib)
+- GitHub: [@Francescodib](https://github.com/Francescodib)
 - LinkedIn: [@Francescodibiase79](https://www.linkedin.com/in/francescodibiase79/)
 - Email: info@francescodibiase.com
 
-## 🙏 Ringraziamenti
+## Ringraziamenti
 
 - Bootstrap team per il framework CSS
 - Bootstrap Icons per le icone
@@ -229,14 +228,10 @@ Questo progetto è rilasciato sotto licenza MIT. Vedi il file [LICENSE](LICENSE)
 
 ---
 
-⭐ Se questo progetto ti è stato utile, lascia una stella!
+Se questo progetto ti è stato utile, lascia una stella su GitHub!
 
-## 🔗 Link Utili
+## Link Utili
 
 - [Bootstrap Documentation](https://getbootstrap.com/docs/)
 - [MDN Web Docs](https://developer.mozilla.org/)
 - [JavaScript ES6+ Features](https://github.com/lukehoban/es6features)
-
----
-
-*Sviluppato con ❤️ per la comunità*
